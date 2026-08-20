@@ -1,4 +1,4 @@
-from langchain_core.prompts.prompt import PromptTemplate 
+from langchain_core.prompts.prompt import PromptTemplate
 from langchain_ollama import ChatOllama
 
 information = """
@@ -20,7 +20,7 @@ given the information {information} about a person I want to create:
 """
 
 summary_promt_template = PromptTemplate(
-        input_variables=["information"], template = summary_template
+    input_variables=["information"], template=summary_template
 )
 
 # llm = ChatOllama(
@@ -47,10 +47,3 @@ prompt_tokens_per_second = prompt_tokens / prompt_duration_seconds
 
 print(f"Время обработки prompt: {prompt_duration_seconds:.3f} сек.")
 print(f"Скорость обработки: {prompt_tokens_per_second:.2f} токенов/сек.")
-
-
-
-
-
-
-
