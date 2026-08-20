@@ -23,11 +23,6 @@ summary_promt_template = PromptTemplate(
     input_variables=["information"], template=summary_template
 )
 
-# llm = ChatOllama(
-#     model="llama3.2",
-#     temperature=0,
-# )
-
 llm = ChatOllama(
     model="gpt-oss:20b",
     temperature=0,
