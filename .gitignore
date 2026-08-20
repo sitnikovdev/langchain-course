@@ -20,6 +20,12 @@ dist/
 .env
 .env.*
 !.env.example
+.envrc
+.envrc.*
+.envrc.local
+
+
+
 
 # macOS
 .DS_Store
