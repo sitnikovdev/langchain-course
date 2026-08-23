@@ -12,4 +12,5 @@ dependencies = [
     "langchain-ollama>=1.1.0",
     "langchain-tavily>=0.2.18",
     "langchainhub>=0.1.21",
+    "rich>=15.0.0",
 ]
