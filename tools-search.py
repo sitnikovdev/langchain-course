@@ -9,22 +9,15 @@ from langchain_core.callbacks import BaseCallbackHandler
 
 
 class CleanConsoleCallback(BaseCallbackHandler):
-    """Печатает только осмысленные шаги: что запросил агент и что реально пришло."""
+    """Лёгкий live-индикатор прогресса. Полная история шагов печатается один раз
+    в конце, из intermediate_steps — без дублирования."""
 
     def on_agent_action(self, action, **kwargs):
         if not action.log.strip():
             return
-        print(f"\n{'─'*60}")
-        print(f"🔧 Вызов инструмента: {action.tool}")
-        print(f"   Аргументы: {action.tool_input}")
-
-    def on_tool_end(self, output, **kwargs):
-        # Реальный результат инструмента, а не пустой лог действия
-        preview = str(output)[:400]
-        print(f"📥 Результат: {preview}{'...' if len(str(output)) > 400 else ''}")
+        print(f"🔧 {action.tool}({action.tool_input}) ...")
 
     def on_agent_finish(self, finish, **kwargs):
-        print(f"\n{'─'*60}")
         print("✅ Готов финальный ответ\n")
 
 
@@ -41,7 +34,6 @@ def multiply(x: float, y: float) -> float:
 def search_web(query: str) -> str:
     """Search the web for information. Pass a focused search query string."""
     result = _tavily.invoke({"query": query})
-    # Оставляем только релевантные поля вместо сырого дампа объекта
     items = result.get("results", []) if isinstance(result, dict) else []
     cleaned = [
         {"title": r.get("title"), "content": r.get("content", "")[:500]}
@@ -89,11 +81,14 @@ result = agent_executor.invoke(
 console = Console()
 console.print(Markdown(result["output"]))
 
-print("\n" + "=" * 60)
-print("📥 История шагов агента")
-print("=" * 60)
-for i, (action, observation) in enumerate(
-    [(a, o) for a, o in result.get("intermediate_steps", []) if a.log.strip()], 1
-):
-    print(f"\n[{i}] {action.tool} → {action.tool_input}")
-    print(f"    {str(observation)[:300]}")
+steps = [(a, o) for a, o in result.get("intermediate_steps", []) if a.log.strip()]
+if steps:
+    print("\n" + "=" * 60)
+    print(f"📥 История шагов агента ({len(steps)})")
+    print("=" * 60)
+    for i, (action, observation) in enumerate(steps, 1):
+        obs_str = str(observation)
+        preview = obs_str[:300] + ("..." if len(obs_str) > 300 else "")
+        print(f"\n[{i}] {action.tool}")
+        print(f"    Запрос:     {action.tool_input}")
+        print(f"    Результат:  {preview}")
