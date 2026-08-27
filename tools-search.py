@@ -57,7 +57,7 @@ prompt = ChatPromptTemplate.from_messages(
 )
 
 tools = [search_web, multiply]
-llm = ChatOllama(model="qwen3:8b", temperature=0)
+llm = ChatOllama(model="qwen3:4b", temperature=0)
 agent = create_tool_calling_agent(llm, tools, prompt)
 
 agent_executor = AgentExecutor(
