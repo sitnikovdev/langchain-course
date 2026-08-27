@@ -74,7 +74,7 @@ agent_executor = AgentExecutor(
 result = agent_executor.invoke(
     {
         "input": "What is the weather in Saransk right now? Compare it with San Francisco. "
-                 "Output temperatures in Celsius.",
+        "Output temperatures in Celsius.",
     }
 )
 
